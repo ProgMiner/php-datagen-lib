@@ -1,0 +1,25 @@
+{
+    "name": "progminer/php-datagen-lib",
+    "description": "Library of PHP-DataGen",
+    "type": "library",
+    "keywords": ["data", "class", "generator"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ProgMiner",
+            "email": "eridan200@mail.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "PHPDataGen\\": "lib"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
