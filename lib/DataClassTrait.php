@@ -37,15 +37,6 @@ trait DataClassTrait {
     protected $variables = [];
 
     /**
-     * @param array $init Initialization data
-     */
-    public function __construct(array $init = []) {
-        foreach ($init as $val => $var) {
-            $this->$var = $val;
-        }
-    }
-
-    /**
      * Returns an array with data from object
      *
      * @return array Data
