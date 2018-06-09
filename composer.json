@@ -15,7 +15,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "PHPDataGen\\Library\\": "lib"
+            "PHPDataGenLib\\": "lib"
         }
     },
     "config": {
