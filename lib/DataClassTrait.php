@@ -32,7 +32,7 @@ namespace PHPDataGen;
 trait DataClassTrait {
 
     public function __isset($key) {
-        return isset($this->$key);
+        return method_exists($this, "get_$key");
     }
 
     public function __get($key) {
