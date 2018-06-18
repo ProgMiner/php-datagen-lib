@@ -37,7 +37,7 @@ trait DataClassTrait {
 
     public function __get($key) {
         if (!isset($this->$key)) {
-            throw \UnexpectedValueException("Variable \"{$var}\" is not exists");
+            throw new \UnexpectedValueException("Variable \"{$var}\" is not exists");
         }
 
         $getter = "get_{$key}";
@@ -46,7 +46,7 @@ trait DataClassTrait {
 
     public function __set($key, $value) {
         if (!isset($this->$key)) {
-            throw \UnexpectedValueException("Variable \"{$var}\" is not exists");
+            throw new \UnexpectedValueException("Variable \"{$var}\" is not exists");
         }
 
         $setter = "set_{$key}";
@@ -54,6 +54,6 @@ trait DataClassTrait {
     }
 
     public function __unset($key) {
-        throw \LogicException("Variable unset is not supported");
+        throw new \LogicException("Variable unset is not supported");
     }
 }
