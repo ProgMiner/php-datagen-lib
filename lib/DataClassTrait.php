@@ -36,18 +36,17 @@ trait DataClassTrait {
     }
 
     public function __get($key) {
-        if (!isset($this->$key)) {
+        $getter = "get_{$key}";
+
+        if (!method_exists($this, $getter)) {
             throw new \UnexpectedValueException("Variable \"{$key}\" is not exists");
         }
 
-        $getter = "get_{$key}";
         return $this->$getter();
     }
 
     public function __set($key, $value) {
-        if (!isset($this->$key)) {
-            throw new \UnexpectedValueException("Variable \"{$key}\" is not exists");
-        }
+        $this->__get($key);
 
         $setter = "set_{$key}";
         if (!method_exists($this, $setter)) {
