@@ -31,26 +31,17 @@ namespace PHPDataGen;
  */
 trait DataClassTrait {
 
-    /**
-     * @var array Array of raw data
-     */
-    protected $variables = [];
-
-    /**
-     * Returns an array with data from object
-     *
-     * @return array Data
-     */
-    public function toArray() {
-        return $this->variables;
-    }
-
     public function __isset($key) {
-        return isset($this->variables[$key]);
+        return isset($this->$key);
     }
 
     public function __get($key) {
-        return $this->variables[$key];
+        if (!isset($this->$key)) {
+            throw \UnexpectedValueException("Variable \"{$var}\" is not exists");
+        }
+
+        $getter = "get_{$key}";
+        return $this->$getter();
     }
 
     public function __set($key, $value) {
@@ -58,19 +49,11 @@ trait DataClassTrait {
             throw \UnexpectedValueException("Variable \"{$var}\" is not exists");
         }
 
-        $validator = "_set_{$key}";
-        if (method_exists($this, $validator)) {
-            $this->$validator();
-        }
-
-        $this->variables[$key] = $value;
+        $setter = "set_{$key}";
+        $this->$setter($value);
     }
 
     public function __unset($key) {
         throw \LogicException("Variable unset is not supported");
-    }
-
-    public function __debugInfo(): array {
-        return $this->toArray();
     }
 }
