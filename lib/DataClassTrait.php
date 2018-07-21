@@ -32,19 +32,19 @@ namespace PHPDataGen;
 trait DataClassTrait {
 
     public function __isset($key) {
-        return method_exists($this, "get_$key");
+        return isset($key);
     }
 
     public function &__get($key) {
-        $getter = "get_{$key}";
-
-        if (!method_exists($this, $getter)) {
+        if (!isset(self::FIELDS[$key])) {
             throw new \UnexpectedValueException("Variable \"{$key}\" is not exists");
         }
 
-        $ret = $this->$getter();
-        if (method_exists($this, "set_$key")) {
+        $getter = 'get'.self::FIELDS[$key];
+        if (method_exists($this, 'set'.self::FIELDS[$key])) {
             $ret = &$this->$getter();
+        } else {
+            $ret = $this->$getter();
         }
 
         return $ret;
@@ -53,7 +53,7 @@ trait DataClassTrait {
     public function __set($key, $value) {
         $this->__get($key);
 
-        $setter = "set_{$key}";
+        $setter = 'set'.self::FIELDS[$key];
         if (!method_exists($this, $setter)) {
             throw new \UnexpectedValueException("Variable \"{$key}\" is not editable");
         }
@@ -62,6 +62,6 @@ trait DataClassTrait {
     }
 
     public function __unset($key) {
-        throw new \LogicException("Variable unset is not supported");
+        throw new \LogicException('Variable unset is not supported');
     }
 }
