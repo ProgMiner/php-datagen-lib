@@ -25,43 +25,11 @@ SOFTWARE. */
 namespace PHPDataGen;
 
 /**
- * A trait for data classes
+ * Object that can be casted from other value
  *
  * @author Eridan Domoratskiy <eridan200@mail.ru>
  */
-trait DataClassTrait {
+interface Castable {
 
-    public function __isset($key) {
-        return isset($key);
-    }
-
-    public function &__get($key) {
-        if (!isset(self::FIELDS[$key])) {
-            throw new \UnexpectedValueException("Variable \"{$key}\" is not exists");
-        }
-
-        $getter = 'get'.self::FIELDS[$key];
-        if (method_exists($this, 'set'.self::FIELDS[$key])) {
-            $ret = &$this->$getter();
-        } else {
-            $ret = $this->$getter();
-        }
-
-        return $ret;
-    }
-
-    public function __set($key, $value) {
-        $this->__get($key);
-
-        $setter = 'set'.self::FIELDS[$key];
-        if (!method_exists($this, $setter)) {
-            throw new \UnexpectedValueException("Variable \"{$key}\" is not editable");
-        }
-
-        $this->$setter($value);
-    }
-
-    public function __unset($key) {
-        throw new \LogicException('Variable unset is not supported');
-    }
+    public static function castFrom($value): Castable;
 }
