@@ -25,11 +25,21 @@ SOFTWARE. */
 namespace PHPDataGen;
 
 /**
- * Object that can be casted from other value
+ * Object that can be casted from other value.
+ *
+ * Used as type of field of PDG class.
  *
  * @author Eridan Domoratskiy <eridan200@mail.ru>
  */
 interface Castable {
 
-    public static function castFrom($value): Castable;
+    /**
+     * Casts $value to self type object
+     *
+     * @param mixed  $value    Value to casting
+     * @param static $previous Previous value of field
+     *
+     * @return static Casted value
+     */
+    public static function castFrom($value, Castable $previous): Castable;
 }
