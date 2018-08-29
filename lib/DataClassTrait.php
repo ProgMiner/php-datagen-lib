@@ -46,16 +46,24 @@ trait DataClassTrait {
     }
 
     public function __isset($key) {
+        if (!isset(self::getFields()[$key])) {
+            return false;
+        }
+
+        if (isset(parent::getFields()[$key])) {
+            return parent::__isset($key);
+        }
+
         return isset($key);
     }
 
     public function &__get($key) {
-        if (!isset(self::FIELDS[$key])) {
+        if (!isset(self::getFields()[$key])) {
             throw new \UnexpectedValueException("Variable \"{$key}\" is not exists");
         }
 
-        $getter = 'get'.self::FIELDS[$key];
-        if (method_exists($this, 'set'.self::FIELDS[$key])) {
+        $getter = 'get'.self::getFields()[$key];
+        if (method_exists($this, 'set'.self::getFields()[$key])) {
             $ret = &$this->$getter();
         } else {
             $ret = $this->$getter();
@@ -67,7 +75,7 @@ trait DataClassTrait {
     public function __set($key, $value) {
         $this->__get($key);
 
-        $setter = 'set'.self::FIELDS[$key];
+        $setter = 'set'.self::getFields()[$key];
         if (!method_exists($this, $setter)) {
             throw new \UnexpectedValueException("Variable \"{$key}\" is not editable");
         }
