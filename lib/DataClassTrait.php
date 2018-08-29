@@ -35,7 +35,9 @@ trait DataClassTrait {
         static $fields = null;
 
         if (is_null($fields)) {
-            if ((new \ReflectionClass(parent::class))->hasMethod('getFields')) {
+            $reflection = (new \ReflectionClass(self::class))->getParentClass();
+
+            if ($reflection !== false && $reflection->hasMethod('getFields')) {
                 $fields = array_merge((array) parent::getFields(), self::FIELDS);
             } else {
                 $fields = self::FIELDS;
