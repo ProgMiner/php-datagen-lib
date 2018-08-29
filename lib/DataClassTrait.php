@@ -31,6 +31,20 @@ namespace PHPDataGen;
  */
 trait DataClassTrait {
 
+    protected static function getFields(): array {
+        static $fields = null;
+
+        if (is_null($fields)) {
+            if ((new ReflectionClass(parent::class))->hasMethod('getFields')) {
+                $fields = array_merge((array) parent::getFields(), self::FIELDS);
+            } else {
+                $fields = self::FIELDS;
+            }
+        }
+
+        return $fields;
+    }
+
     public function __isset($key) {
         return isset($key);
     }
