@@ -27,18 +27,20 @@ namespace PHPDataGen;
 /**
  * A trait for data classes
  *
+ * All properties, constants, and methods starting with "_PDG_" are reserved for internal functionality.
+ *
  * @author Eridan Domoratskiy <eridan200@mail.ru>
  */
 trait DataClassTrait {
 
-    protected static function getFields(): array {
+    protected static function _PDG_getFields(): array {
         static $fields = null;
 
         if (is_null($fields)) {
             $reflection = (new \ReflectionClass(self::class))->getParentClass();
 
-            if ($reflection !== false && $reflection->hasMethod('getFields')) {
-                $fields = array_merge((array) parent::getFields(), self::FIELDS);
+            if ($reflection !== false && $reflection->hasMethod('_PDG_getFields')) {
+                $fields = array_merge((array) parent::_PDG_getFields(), self::FIELDS);
             } else {
                 $fields = self::FIELDS;
             }
@@ -48,11 +50,11 @@ trait DataClassTrait {
     }
 
     public function __isset($key) {
-        if (!isset(self::getFields()[$key])) {
+        if (!isset(self::_PDG_getFields()[$key])) {
             return false;
         }
 
-        if (isset(parent::getFields()[$key])) {
+        if (isset(parent::_PDG_getFields()[$key])) {
             return parent::__isset($key);
         }
 
@@ -60,12 +62,12 @@ trait DataClassTrait {
     }
 
     public function &__get($key) {
-        if (!isset(self::getFields()[$key])) {
+        if (!isset(self::_PDG_getFields()[$key])) {
             throw new \UnexpectedValueException("Variable \"{$key}\" is not exists");
         }
 
-        $getter = 'get'.self::getFields()[$key];
-        if (method_exists($this, 'set'.self::getFields()[$key])) {
+        $getter = 'get'.self::_PDG_getFields()[$key];
+        if (method_exists($this, 'set'.self::_PDG_getFields()[$key])) {
             $ret = &$this->$getter();
         } else {
             $ret = $this->$getter();
@@ -77,7 +79,7 @@ trait DataClassTrait {
     public function __set($key, $value) {
         $this->__get($key);
 
-        $setter = 'set'.self::getFields()[$key];
+        $setter = 'set'.self::_PDG_getFields()[$key];
         if (!method_exists($this, $setter)) {
             throw new \UnexpectedValueException("Variable \"{$key}\" is not editable");
         }
