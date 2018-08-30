@@ -25,13 +25,13 @@ SOFTWARE. */
 namespace PHPDataGen;
 
 /**
- * A trait for data classes
+ * A trait for PDG classes
  *
  * All properties, constants, and methods starting with "_PDG_" are reserved for internal functionality.
  *
  * @author Eridan Domoratskiy <eridan200@mail.ru>
  */
-trait DataClassTrait {
+trait ClassTrait {
 
     private function _PDG_construct(array $init = []) {
         foreach ($init as $field => $value) {
@@ -48,7 +48,7 @@ trait DataClassTrait {
 
         foreach ($reflection as $parameter) {
             if (!$parameter->isOptional()) {
-                throw new LogicException('Parent class has not constructor without required parameters');
+                throw new \LogicException('Parent class has not constructor without required parameters');
             }
         }
 
