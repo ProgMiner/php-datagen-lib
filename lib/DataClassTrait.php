@@ -35,7 +35,7 @@ trait DataClassTrait {
 
     private function _PDG_construct(array $init = []) {
         foreach ($init as $field => $value) {
-            $this->$field = $this->{'validate'.self::getFields()[$field]}($value);
+            $this->$field = $this->{'validate'.self::_PDG_getFields()[$field]}($value);
         }
 
         $reflection = (new \ReflectionClass(self::class))->getParentClass();
