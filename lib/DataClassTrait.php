@@ -35,7 +35,7 @@ trait DataClassTrait {
 
     private function _PDG_construct(array $init = []) {
         foreach ($init as $field => $value) {
-            $this->{$field} = $this->{'validate' . self::FIELDS[$field]}($value);
+            $this->$field = $this->{'validate'.self::getFields()[$field]}($value);
         }
 
         $reflection = (new \ReflectionClass(self::class))->getParentClass();
@@ -46,20 +46,13 @@ trait DataClassTrait {
 
         $reflection = $reflection->getMethod('__construct')->getParameters();
 
-        if (count($reflection) > 1) {
-            return;
+        foreach ($reflection as $parameter) {
+            if (!$parameter->isOptional()) {
+                throw new LogicException('Parent class has not constructor without required parameters');
+            }
         }
 
-        if (count($reflection) < 1) {
-            parent::__construct($init);
-            return;
-        }
-
-        $reflection = $reflection[0];
-
-        if (!$reflection->hasType() || $reflection->isArray()) {
-            parent::__construct($init);
-        }
+        parent::__construct();
     }
 
     protected static function _PDG_getFields(): array {
