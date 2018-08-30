@@ -33,6 +33,35 @@ namespace PHPDataGen;
  */
 trait DataClassTrait {
 
+    private function _PDG_construct(array $init = []) {
+        foreach ($init as $field => $value) {
+            $this->{$field} = $this->{'validate' . self::FIELDS[$field]}($value);
+        }
+
+        $reflection = (new \ReflectionClass(self::class))->getParentClass();
+
+        if ($reflection === false || !$reflection->hasMethod('__construct')) {
+            return;
+        }
+
+        $reflection = $reflection->getMethod('__construct')->getPerameters();
+
+        if (count($reflection) > 1) {
+            return;
+        }
+
+        if (count($reflection) < 1) {
+            parent::__construct($init);
+            return;
+        }
+
+        $reflection = $reflection[0];
+
+        if (!$reflection->hasType() || $reflection->isArray()) {
+            parent::__construct($init);
+        }
+    }
+
     protected static function _PDG_getFields(): array {
         static $fields = null;
 
