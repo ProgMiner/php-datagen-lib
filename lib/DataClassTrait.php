@@ -44,7 +44,7 @@ trait DataClassTrait {
             return;
         }
 
-        $reflection = $reflection->getMethod('__construct')->getPerameters();
+        $reflection = $reflection->getMethod('__construct')->getParameters();
 
         if (count($reflection) > 1) {
             return;
